@@ -1,0 +1,25 @@
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_check_root() {
+        use std::process::{Output, Command};
+
+        let username: Output = Command::new("whoami")
+            .output()
+            .unwrap();
+
+        let username : String = String::from_utf8(username.stdout).unwrap();
+
+        match username == "root" {
+            true => assert!(check_root),
+            false => assert!(!check_root),
+            
+        }
+
+
+
+    }
+}
