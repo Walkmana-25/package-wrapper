@@ -1,17 +1,23 @@
-use clap::{Parser, Subcommand};
+use clap::Parser;
 
-#[derive(Parser, Debug)]
-#[command(author, version, about, long_about = None)]
-#[command(propagate_version = true)]
-struct Cli{
-    #[command(Subcommand)]
-    install_Cmd : install
-    
-}
+mod commands;
 
 
 
 fn main() {
-    let args = Cli::parse();
+    let args = commands::Cli::parse();
+
+
+    match args.command {
+        commands::Commands::Install { remote } => {
+            println!("Cloning {remote}");
+        }
+        _ => {
+            println!("HI");
+        }
+
+    }
+
+
 
 }

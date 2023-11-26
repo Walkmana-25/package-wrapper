@@ -19,7 +19,7 @@
                     "kind": "bin"
                 }
             },
-            "args": ["--name","hoge"],
+            "args": [],
             "cwd": "${workspaceFolder}"
         },
         {
