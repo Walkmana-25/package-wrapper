@@ -1,4 +1,4 @@
-use clap::{Parser, Subcommand};
+use clap::{Parser, Subcommand, Arg};
 
 
 
@@ -18,7 +18,19 @@ pub enum Commands{
     #[command(arg_required_else_help = true)]
     /// Install Package
     Install {
-        remote: String,
+        #[arg(
+            help = "package name (space separated value)",
+            value_delimiter = ' '
+        )]
+        package: Vec<String>,
+
+        #[arg(
+            short,
+            long,
+            help = "Bypass any confirmation"
+        )]
+        yes_all: bool,
+
     },
     /// Remove Package
     Remove {

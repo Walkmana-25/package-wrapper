@@ -1,24 +1,21 @@
 use clap::Parser;
+use commands::Commands;
 
 mod commands;
+mod install;
 mod libs;
-
 
 
 fn main() {
     let args = commands::Cli::parse();
 
-
-    match args.command {
-        commands::Commands::Install { remote } => {
-            println!("Cloning {remote}");
-        }
-        _ => {
+    match &args.command{
+        Commands::Install { package, yes_all } => {
             println!("HI");
         }
-
+        _ => {
+            println!("HEY");
+        }
     }
-
-
 
 }
