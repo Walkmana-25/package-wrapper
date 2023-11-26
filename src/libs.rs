@@ -14,12 +14,19 @@ mod tests {
         let username : String = String::from_utf8(username.stdout).unwrap();
 
         match username == "root" {
-            true => assert!(check_root),
-            false => assert!(!check_root),
+            true => assert!(check_root()),
+            false => assert!(!check_root()),
             
         }
-
-
-
     }
 }
+
+pub fn check_root() -> bool {
+    let username = whoami::username();
+    
+    username == "root"
+}
+
+
+
+
