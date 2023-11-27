@@ -1,3 +1,4 @@
+use thiserror::Error;
 
 #[cfg(test)]
 mod tests {
@@ -27,6 +28,12 @@ pub fn check_root() -> bool {
     username == "root"
 }
 
+
+#[derive(Error, Debug)]
+pub enum PWError {
+    #[error("Supported Package Manager is not found.")]
+    PackageManagerError
+}
 
 
 
