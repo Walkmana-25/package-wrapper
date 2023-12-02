@@ -27,7 +27,7 @@ mod tests {
     #[test]
     fn test_runcmd(){
         let run_result: Result<(), anyhow::Error> =
-                run_cmd(vec!["/bin/touch".to_string(), "/tmp/rust-test".to_string(), "&&".to_string(), "whoami".to_string()]);
+                run_cmd(vec!["/bin/touch".to_string(), "/tmp/rust-test".to_string()]);
         println!("run_result:{:?}", run_result);
 
         let test_result =  Path::new("/tmp/rust-test").exists();
@@ -38,6 +38,14 @@ mod tests {
         assert!(run_result.is_ok());
 
 
+    }
+    #[test]
+    fn test_rootcmd(){
+
+        let run_result: Result<(), anyhow::Error> =
+                run_cmd_root(vec![format!("test {} = `whoami`", whoami::username())]);
+
+        assert!(run_result.is_ok());
     }
 
 
@@ -69,7 +77,9 @@ pub fn run_cmd(cmd: Vec<String>) -> Result<(), anyhow::Error> {
 #[derive(Error, Debug)]
 pub enum PWError {
     #[error("Supported Package Manager is not found.")]
-    PackageManagerError
+    PackageManagerError,
+    #[error("you cannot perform this operation unless you are root.")]
+    NotRootUserError
 }
 
 
