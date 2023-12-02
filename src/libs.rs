@@ -1,7 +1,10 @@
 use thiserror::Error;
+use std::fs;
 
 #[cfg(test)]
 mod tests {
+    use std::fs;
+
     use super::*;
 
     #[test]
@@ -20,6 +23,23 @@ mod tests {
             
         }
     }
+
+    #[test]
+    fn test_runcmd(){
+        let run_result: Result<(), anyhow::Error> =
+                runcmd(vec!["touch /tmp/rust-test".to_string()]);
+
+        let test_result =  fs::metadata("/tmp/rust-test").is_ok();
+        
+        fs::remove_file("/tmp/rust-test").ok();
+
+        assert!(test_result);
+        assert!(run_result.is_ok());
+
+
+    }
+
+
 }
 
 pub fn check_root() -> bool {
