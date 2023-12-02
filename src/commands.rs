@@ -13,23 +13,25 @@ pub struct Cli{
 
 
 
-#[derive(Subcommand)]
+#[derive(Subcommand, Debug)]
 pub enum Commands{
     #[command(arg_required_else_help = true)]
     /// Install Package
     Install {
         #[arg(
             help = "package name (space separated value)",
-            value_delimiter = ' '
+            value_delimiter = ' ',
+            required = true
         )]
         package: Vec<String>,
 
         #[arg(
             short,
             long,
-            help = "Bypass any confirmation"
+            help = "Bypass any confirmation",
         )]
         yes_all: bool,
+
 
     },
     /// Remove Package
