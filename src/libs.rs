@@ -1,9 +1,9 @@
 use thiserror::Error;
-use std::fs;
+use std::process;
 
 #[cfg(test)]
 mod tests {
-    use std::fs;
+    use std::{fs, path::Path};
 
     use super::*;
 
@@ -27,10 +27,11 @@ mod tests {
     #[test]
     fn test_runcmd(){
         let run_result: Result<(), anyhow::Error> =
-                runcmd(vec!["touch /tmp/rust-test".to_string()]);
+                run_cmd(vec!["/bin/touch".to_string(), "/tmp/rust-test".to_string(), "&&".to_string(), "whoami".to_string()]);
+        println!("run_result:{:?}", run_result);
 
-        let test_result =  fs::metadata("/tmp/rust-test").is_ok();
-        
+        let test_result =  Path::new("/tmp/rust-test").exists();
+        println!("test_result:{:?}", test_result);
         fs::remove_file("/tmp/rust-test").ok();
 
         assert!(test_result);
@@ -47,6 +48,22 @@ pub fn check_root() -> bool {
     
     username == "root"
 }
+
+pub fn run_cmd(cmd: Vec<String>) -> Result<(), anyhow::Error> {
+
+    let mut command = process::Command::new("/bin/bash")
+        .arg("-c")
+        .arg(cmd.join(" "))
+        .stdin(process::Stdio::inherit())
+        .spawn()?;
+
+
+
+    command.wait()?;
+
+    Ok(())
+}
+
 
 
 #[derive(Error, Debug)]
