@@ -45,7 +45,12 @@ mod tests {
         let run_result: Result<(), anyhow::Error> =
                 run_cmd_root(vec![format!("test {} = `whoami`", whoami::username())]);
 
-        assert!(run_result.is_ok());
+        if "root" == whoami::username() {
+            assert!(run_result.is_ok());
+        } else {
+            assert!(run_result.is_err());
+        }
+
     }
 
 
@@ -68,6 +73,18 @@ pub fn run_cmd(cmd: Vec<String>) -> Result<(), anyhow::Error> {
 
 
     command.wait()?;
+
+    Ok(())
+}
+
+pub fn run_cmd_root(cmd: Vec<String>) -> Result<(), anyhow::Error> {
+
+    if !check_root() {
+        return Err(PWError::NotRootUserError.into());
+    }
+
+
+    run_cmd(cmd)?;
 
     Ok(())
 }
