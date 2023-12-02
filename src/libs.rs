@@ -1,5 +1,6 @@
+use anyhow::anyhow;
 use thiserror::Error;
-use std::process;
+use std::process::{self, Command};
 
 #[cfg(test)]
 mod tests {
@@ -88,6 +89,27 @@ pub fn run_cmd_root(cmd: Vec<String>) -> Result<(), anyhow::Error> {
 
     Ok(())
 }
+
+/// check which package manager run in this system.
+pub fn select_package_manager() -> Result<String, anyhow::Error>{
+
+    let package_list = [
+        "pacman", "apt"
+    ];
+
+    for p in package_list {
+        let output = Command::new("/usr/bin/which").arg(p).output();
+        if output.is_ok() {
+            return Ok(p.to_string());
+        } 
+        continue;
+
+    }
+
+    Err(PWError::PackageManagerError.into())
+
+}
+
 
 
 
