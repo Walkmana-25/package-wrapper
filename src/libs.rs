@@ -98,11 +98,12 @@ pub fn select_package_manager() -> Result<String, anyhow::Error>{
     ];
 
     for p in package_list {
-        let output = Command::new("/usr/bin/which").arg(p).output();
-        if output.is_ok() {
+        let output = Command::new("/usr/bin/which").arg(p).output().unwrap();
+
+        if String::from_utf8(output.stdout).unwrap() != "" {
             return Ok(p.to_string());
-        } 
-        continue;
+        }
+
 
     }
 
