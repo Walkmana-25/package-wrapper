@@ -2,6 +2,10 @@
 name = "package-wrapper"
 version = "0.1.0"
 edition = "2021"
+license = "MIT"
+description = "A package manager wrapper command line tool for linux."
+authors = ["Yuta Takahashi <y.highbridge04@gmail.com>"]
+repository = "https://github.com/Walkmana-25/package-wrapper"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
@@ -10,3 +14,7 @@ anyhow = "1.0.75"
 clap = { version = "4.4.8", features = ["derive"] }
 thiserror = "1.0.50"
 whoami = "1.4.1"
+
+[[bin]]
+name = "pacw"
+path = "src/main.rs"
