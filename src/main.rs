@@ -15,7 +15,7 @@ fn main() -> Result<(), Error> {
     match &args.command{
         Commands::Install { package, yes_all } => {
             let cmd = install::gen_cmd(
-                    &package_manager, package, *yes_all, install::ModeSelect::Install
+                    &package_manager, Some(package), *yes_all, install::ModeSelect::Install
                 )?;
             println!("Run `{}`", cmd.join(" "));
 
@@ -25,13 +25,24 @@ fn main() -> Result<(), Error> {
         },
         Commands::Remove { package, yes_all } => {
             let cmd = install::gen_cmd(
-                    &package_manager, package, *yes_all, install::ModeSelect::Remove
+                    &package_manager, Some(package), *yes_all, install::ModeSelect::Remove
                 )?;
             println!("Run `{}`", cmd.join(" "));
 
             run_cmd_root(cmd)?;
 
             Ok(())
+        },
+        Commands::Update { yes_all } => {
+            let cmd = install::gen_cmd(
+                    &package_manager, None, *yes_all, install::ModeSelect::Update
+                )?;
+            println!("Run `{}`", cmd.join(" "));
+
+            run_cmd_root(cmd)?;
+
+            Ok(())
+
         },
 
         _ => {

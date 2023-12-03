@@ -50,6 +50,11 @@ pub enum Commands{
         )]
         yes_all: bool,
     },
+    /// Update Package
+    Update {
+        #[arg(short, long, help = "Bypass any confirmations")]
+        yes_all: bool
+    },
     /// Search Repository Package
     Search {
         remote: String,
