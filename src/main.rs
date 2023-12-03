@@ -22,7 +22,18 @@ fn main() -> Result<(), Error> {
             run_cmd_root(cmd)?;
 
             Ok(())
-        }
+        },
+        Commands::Remove { package, yes_all } => {
+            let cmd = install::gen_cmd(
+                    &package_manager, package, *yes_all, install::ModeSelect::Remove
+                )?;
+            println!("Run `{}`", cmd.join(" "));
+
+            run_cmd_root(cmd)?;
+
+            Ok(())
+        },
+
         _ => {
             println!("HEY");
             Ok(())

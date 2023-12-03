@@ -36,7 +36,19 @@ pub enum Commands{
     },
     /// Remove Package
     Remove {
-        remote: String,
+        #[arg(
+            help = "package name (space separated value)",
+            value_delimiter = ' ',
+            required = true
+        )]
+        package: Vec<String>,
+
+        #[arg(
+            short,
+            long,
+            help = "Bypass any confirmation",
+        )]
+        yes_all: bool,
     },
     /// Search Repository Package
     Search {
