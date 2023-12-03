@@ -56,10 +56,16 @@ fn main() -> Result<(), Error> {
 
             Ok(())
         },
+        Commands::List => {
+            let cmd = install::gen_cmd(
+                &package_manager, None, None, install::ModeSelect::List
+            )?;
+            println!("Run `{}`", cmd.join(" "));
 
-        _ => {
-            println!("HEY");
+            run_cmd(cmd)?;
+
             Ok(())
+
         }
     }
 

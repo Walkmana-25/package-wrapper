@@ -65,9 +65,7 @@ pub enum Commands{
         package: Vec<String>,
     },
     /// Show installed Package
-    List {
-        remote: String,
-    }
+    List
 
 
 

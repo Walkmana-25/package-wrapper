@@ -37,7 +37,8 @@ pub enum ModeSelect {
     Install,
     Remove,
     Update,
-    Search
+    Search,
+    List
 }
 
 pub fn gen_cmd(
@@ -93,8 +94,19 @@ pub fn gen_cmd(
                 command: vec!["apt-cache".to_string(), "search".to_string()],
                 yes_all: None
             });
-        }
+        },
 
+        ModeSelect::List => {
+            cmd.insert("pacman".to_string(), Cmd {
+                command: vec!["pacman".to_string(), "-Qs".to_string()],
+                yes_all: None
+            });
+    
+            cmd.insert("apt".to_string(), Cmd {
+                command: vec!["dpkg".to_string(), "-l".to_string()],
+                yes_all: None
+            });
+        }
     
     }
 
