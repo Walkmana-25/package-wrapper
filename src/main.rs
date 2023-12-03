@@ -15,7 +15,7 @@ fn main() -> Result<(), Error> {
     match &args.command{
         Commands::Install { package, yes_all } => {
             let cmd = install::gen_cmd(
-                    &package_manager, package, *yes_all
+                    &package_manager, package, *yes_all, install::ModeSelect::Install
                 )?;
             println!("Run `{}`", cmd.join(" "));
 

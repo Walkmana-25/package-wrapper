@@ -19,7 +19,7 @@ mod tests {
             &"pacman".to_string(),
             &vec!["package1".to_string(), "package2".to_string()],
             false,
-            
+            ModeSelect::Install
         );
         let cmd_arch : Result<Vec<String>, Error> = gen_cmd;
 
@@ -32,22 +32,45 @@ struct Cmd {
     yes_all: String,
 }
 
+pub enum ModeSelect {
+    Install,
+    Remove
+}
+
 pub fn gen_cmd<'a>(
     package_manager: &'a String,
     packages: &'a Vec<String>,
-    yes_all: bool
+    yes_all: bool,
+    mode: ModeSelect
     ) -> Result<Vec<String>, Error > {
 
     let mut cmd = HashMap::new();
-    cmd.insert("pacman".to_string(), Cmd {
-        command: vec!["pacman".to_string(), "-S".to_string()],
-        yes_all: "--noconfirm".to_string(),
-    });
+
+    match mode {
+        ModeSelect::Install => {
+            cmd.insert("pacman".to_string(), Cmd {
+                command: vec!["pacman".to_string(), "-S".to_string()],
+                yes_all: "--noconfirm".to_string(),
+            });
     
-    cmd.insert("apt".to_string(), Cmd {
-        command: vec!["apt-get".to_string(), "install".to_string()],
-        yes_all: "-y".to_string(),
-    });
+            cmd.insert("apt".to_string(), Cmd {
+                command: vec!["apt-get".to_string(), "install".to_string()],
+                yes_all: "-y".to_string(),
+            });
+        },
+        ModeSelect::Remove => {
+            cmd.insert("pacman".to_string(), Cmd {
+                command: vec!["pacman".to_string(), "-R".to_string()],
+                yes_all: "--noconfirm".to_string(),
+            });
+    
+            cmd.insert("apt".to_string(), Cmd {
+                command: vec!["apt-get".to_string(), "remove".to_string()],
+                yes_all: "-y".to_string(),
+            });
+        }
+    
+    }
 
     let package_manager_list = ["apt".to_string(), "pacman".to_string()];
 
