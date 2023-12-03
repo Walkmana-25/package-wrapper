@@ -25,6 +25,51 @@ mod tests {
 
         assert_eq!(cmd_arch.ok(), std::option::Option::Some(vec!["pacman".to_string(), "-S".to_string(), "package1".to_string(), "package2".to_string()]));
     }
+
+    #[test]
+    fn test_remove_gen_cmd() {
+
+        let gen_cmd = gen_cmd(
+            &"pacman".to_string(),
+            Some(&vec!["package1".to_string(), "package2".to_string()]),
+            Some(true),
+            ModeSelect::Remove
+        );
+        let cmd_arch : Result<Vec<String>, Error> = gen_cmd;
+
+        assert_eq!(cmd_arch.ok(), std::option::Option::Some(vec!["pacman".to_string(), "-R".to_string(), "--noconfirm".to_string(), "package1".to_string(), "package2".to_string()]));
+    }
+    #[test]
+    fn test_search_gen_cmd() {
+
+        let gen_cmd = gen_cmd(
+            &"apt".to_string(),
+            Some(&vec!["package1".to_string()]),
+            None,
+            ModeSelect::Search
+        );
+        let cmd_arch : Result<Vec<String>, Error> = gen_cmd;
+
+        assert_eq!(cmd_arch.ok(), std::option::Option::Some(vec![
+            "apt-cache".to_string(), "search".to_string(), "package1".to_string()
+        ]));
+    }
+
+    #[test]
+    fn test_list_gen_cmd() {
+
+        let gen_cmd = gen_cmd(
+            &"apt".to_string(),
+            None,
+            None,
+            ModeSelect::List
+        );
+        let cmd_arch : Result<Vec<String>, Error> = gen_cmd;
+
+        assert_eq!(cmd_arch.ok(), std::option::Option::Some(vec![
+            "dpkg".to_string(), "-l".to_string()
+        ]));
+    }
 }
 
 struct Cmd {
