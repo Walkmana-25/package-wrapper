@@ -1,4 +1,4 @@
-use clap::{Parser, Subcommand, Arg};
+use clap::{Parser, Subcommand};
 
 
 
@@ -57,7 +57,12 @@ pub enum Commands{
     },
     /// Search Repository Package
     Search {
-        remote: String,
+        #[arg(
+            help = "package name (space separated value)",
+            value_delimiter = ' ',
+            required = true
+        )]
+        package: Vec<String>,
     },
     /// Show installed Package
     List {

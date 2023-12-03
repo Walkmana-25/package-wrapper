@@ -18,7 +18,7 @@ mod tests {
         let gen_cmd = gen_cmd(
             &"pacman".to_string(),
             Some(&vec!["package1".to_string(), "package2".to_string()]),
-            false,
+            Some(false),
             ModeSelect::Install
         );
         let cmd_arch : Result<Vec<String>, Error> = gen_cmd;
@@ -29,19 +29,21 @@ mod tests {
 
 struct Cmd {
     command: Vec<String>,
-    yes_all: String,
+    yes_all: Option<String>
 }
 
+// Select generate command mode
 pub enum ModeSelect {
     Install,
     Remove,
-    Update
+    Update,
+    Search
 }
 
-pub fn gen_cmd<'a>(
-    package_manager: &'a String,
+pub fn gen_cmd(
+    package_manager: &String,
     packages: Option<&Vec<String>>,
-    yes_all: bool,
+    yes_all: Option<bool>,
     mode: ModeSelect
     ) -> Result<Vec<String>, Error > {
 
@@ -51,36 +53,48 @@ pub fn gen_cmd<'a>(
         ModeSelect::Install => {
             cmd.insert("pacman".to_string(), Cmd {
                 command: vec!["pacman".to_string(), "-S".to_string()],
-                yes_all: "--noconfirm".to_string(),
+                yes_all: Some("--noconfirm".to_string())
             });
     
             cmd.insert("apt".to_string(), Cmd {
                 command: vec!["apt-get".to_string(), "install".to_string()],
-                yes_all: "-y".to_string(),
+                yes_all: Some("-y".to_string())
             });
         },
         ModeSelect::Remove => {
             cmd.insert("pacman".to_string(), Cmd {
                 command: vec!["pacman".to_string(), "-R".to_string()],
-                yes_all: "--noconfirm".to_string(),
+                yes_all: Some("--noconfirm".to_string())
             });
     
             cmd.insert("apt".to_string(), Cmd {
                 command: vec!["apt-get".to_string(), "remove".to_string()],
-                yes_all: "-y".to_string(),
+                yes_all: Some("-y".to_string())
             });
         },
         ModeSelect::Update => {
             cmd.insert("pacman".to_string(), Cmd {
                 command: vec!["pacman".to_string(), "-Syu".to_string()],
-                yes_all: "--noconfirm".to_string(),
+                yes_all: Some("--noconfirm".to_string())
             });
     
             cmd.insert("apt".to_string(), Cmd {
                 command: vec!["apt-get".to_string(), "update".to_string(), "&&".to_string(), "apt-get".to_string(), "upgrade".to_string()],
-                yes_all: "-y".to_string(),
+                yes_all: Some("-y".to_string())
+            });
+        },
+        ModeSelect::Search => {
+            cmd.insert("pacman".to_string(), Cmd {
+                command: vec!["pacman".to_string(), "-Ss".to_string()],
+                yes_all: None
+            });
+    
+            cmd.insert("apt".to_string(), Cmd {
+                command: vec!["apt-cache".to_string(), "search".to_string()],
+                yes_all: None
             });
         }
+
     
     }
 
@@ -91,15 +105,12 @@ pub fn gen_cmd<'a>(
         Ok(i) => {
             let space = " ".to_string();
             let current_cmd = cmd.get(package_manager).unwrap();
-            let confirm_cmd = if yes_all {
-                &current_cmd.yes_all
-            } else {
-                &space
-            };
             let mut command : Vec<String> = current_cmd.command.clone();
 
-            if yes_all {
-                command.push( current_cmd.yes_all.clone());
+            if let Some(i) = yes_all {
+                if i {
+                    command.push(current_cmd.yes_all.clone().unwrap());
+                }
             }
 
             match packages {

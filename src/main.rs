@@ -3,6 +3,8 @@ use clap::Parser;
 use commands::Commands;
 use libs::run_cmd_root;
 
+use crate::libs::run_cmd;
+
 mod commands;
 mod install;
 mod libs;
@@ -15,7 +17,7 @@ fn main() -> Result<(), Error> {
     match &args.command{
         Commands::Install { package, yes_all } => {
             let cmd = install::gen_cmd(
-                    &package_manager, Some(package), *yes_all, install::ModeSelect::Install
+                    &package_manager, Some(package), Some(*yes_all), install::ModeSelect::Install
                 )?;
             println!("Run `{}`", cmd.join(" "));
 
@@ -25,7 +27,7 @@ fn main() -> Result<(), Error> {
         },
         Commands::Remove { package, yes_all } => {
             let cmd = install::gen_cmd(
-                    &package_manager, Some(package), *yes_all, install::ModeSelect::Remove
+                    &package_manager, Some(package), Some(*yes_all), install::ModeSelect::Remove
                 )?;
             println!("Run `{}`", cmd.join(" "));
 
@@ -35,7 +37,7 @@ fn main() -> Result<(), Error> {
         },
         Commands::Update { yes_all } => {
             let cmd = install::gen_cmd(
-                    &package_manager, None, *yes_all, install::ModeSelect::Update
+                    &package_manager, None, Some(*yes_all), install::ModeSelect::Update
                 )?;
             println!("Run `{}`", cmd.join(" "));
 
@@ -43,6 +45,16 @@ fn main() -> Result<(), Error> {
 
             Ok(())
 
+        },
+        Commands::Search {package} => {
+            let cmd = install::gen_cmd(
+                &package_manager, Some(package), None, install::ModeSelect::Search
+            )?;
+            println!("Run `{}`", cmd.join(" "));
+
+            run_cmd(cmd)?;
+
+            Ok(())
         },
 
         _ => {
